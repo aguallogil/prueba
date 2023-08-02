@@ -1,0 +1,151 @@
+
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="flex items-center justify-between py-4 bg-white dark:bg-gray-800">
+        <div>
+            <button  (click)="click($event)" type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                Add New
+            </button>
+            <!-- Dropdown menu -->
+            <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reward</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Promote</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Activate account</a>
+                    </li>
+                </ul>
+                <div class="py-1">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete User</a>
+                </div>
+            </div>
+        </div>
+        <label for="table-search" class="sr-only">Search</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input [(ngModel)]="searchTerm" (keyup)="onSearchChange()" (keyup.enter)="filterUsers()" type="text" id="table-search-meals" class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="type the search and press enter">
+        </div>
+    </div>
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Description
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Price
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" *ngFor="let i of data">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                       {{i.name | uppercase}}
+                    </div>
+                </td>
+               
+                <td class="px-6 py-4">
+                    {{i.description | uppercase}}
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center">
+                        ${{i.price}}
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <!-- Modal toggle -->
+                    <a href="" (click)="edit($event,i)" type="button" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> |
+                    <a href="" (click)="delete($event,i)" type="button" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+   
+    <!-- Edit user modal -->
+    <div id="editUserModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 hidden right-0 z-50 flex items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full pointer-events-none">
+                    
+        <div class="relative w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <form [formGroup]="mealForm" class="relative bg-white rounded-lg shadow dark:bg-gray-700 pointer-events-auto" (ngSubmit)="onSubmit()">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Meal
+                    </h3>
+                   <button (click)="closeModal($event)" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close</span>
+                </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <div class="grid grid-cols-6 gap-6">
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="first-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                            <input formControlName="name" type="text" name="name" id="name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name" required="">
+                            <div class="text-red-500 text-xs mt-1" *ngIf="formSubmitted && mealForm.controls.name.invalid">The name is required.</div>
+                        </div>
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="last-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+                            <input formControlName="price" type="number" min="0" name="price" id="price" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Price" required="">
+                            <div class="text-red-500 text-xs mt-1" *ngIf="formSubmitted && mealForm.controls.price.invalid">The price is required.</div>
+                        </div>
+                        <div class="col-span-6 sm:col-span-6">
+                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                            <textarea formControlName="description" name="description" id="description" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Description" required=""></textarea>
+                            <div class="text-red-500 text-xs mt-1" *ngIf="formSubmitted && mealForm.controls.description.invalid">The description is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<nav aria-label="Page navigation example" class="flex justify-center mt-4">
+    <ul class="flex items-center -space-x-px h-10 text-base">
+      <li>
+        <button [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)" class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          <span class="sr-only">Previous</span>
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+          </svg>
+        </button>
+        <li *ngFor="let page of pages">
+            <button [disabled]="currentPage === page" (click)="goToPage(page)" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ page }}</button>
+        </li>
+      <li>
+        <button [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          <span class="sr-only">Next</span>
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+
+  
+  
+

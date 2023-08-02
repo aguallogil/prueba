@@ -1,0 +1,8 @@
+<ng-container *ngIf="isAuthenticated(); else unauthenticated">
+    <app-nav-bar-template></app-nav-bar-template>
+</ng-container>
+  
+  <ng-template #unauthenticated>
+    <app-unauthenticated-content></app-unauthenticated-content>
+  </ng-template>
+  
